@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1">
+
+    <title>Kuber</title>
+
+    <style>
+/*       body {
+        border: 1px solid black;
+      } */
+    </style>
+
+    <!-- Inline scripts are forbidden in Firefox OS apps (CSP restrictions),
+         so we use a script file. -->
+    <script src="app.js" defer></script>
+
+  </head>
+
+  <body>
+    <!-- This code is in the public domain. Enjoy! -->
+    <h1>Registration</h1>
+     <form id="regform">
+        Name:<br>
+        <input class="items" type="text" name="name"><br><br>
+        Mobile No.:<br>
+        <input class="items" type="number" name="mob"><br><br>
+        User Type: <br>
+        <input class="items" type="radio" name="usertype" value="provider" checked>Provider<br>
+        <input class="items" type="radio" name="usertype" value="consumer">Consumer<br><br>
+        Services: <br>
+         <select class="items" name="servicetype" form="regform" onfocus="func()">
+          <option class="selitems" value="carpenter">Carpenter</option>
+          <option class="selitems" value="plumber">Plumber</option>
+          <option class="selitems" value="painter">Painter</option>
+        </select> 
+      </form> 
+  </body>
+
+</html>
