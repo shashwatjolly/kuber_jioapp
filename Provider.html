@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+.switch input { 
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #2196F3;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+</style>
+<link rel="stylesheet" href="style.css">
+<script src="app2.js" defer></script>
+<script src="https://www.gstatic.com/firebasejs/5.7.0/firebase.js"></script>
+<script>
+    var config = {
+    apiKey: "AIzaSyC_j71A8Gp_teFwKQDcaAc2PU8az_64XLc",
+    authDomain: "sawaalsite.firebaseapp.com",
+    databaseURL: "https://sawaalsite.firebaseio.com",
+    projectId: "sawaalsite",
+    storageBucket: "sawaalsite.appspot.com",
+    messagingSenderId: "44834842355",
+  };
+  firebase.initializeApp(config);
+
+    var mobile = localStorage.getItem("Mobile");// get from local storage
+    var ref = firebase.database().ref("Users/Providers");
+    var store;
+    ref.orderByChild("Mobile").equalTo(mobile).once("value", function(snapshot) {
+  snapshot.forEach(function(data) {
+    var tmp = data.val();
+    store = data.key;
+    console.log(store);
+    
+    firebase.database().ref('Users/' + "Providers/"+store).on('child_changed',function(snapshot){
+    	if (snapshot.key == "CurrJob")
+    	{
+    		var temp=(snapshot.val()!=0);
+    		
+    		if(temp)
+    		{	
+    			console.log(snapshot.val())
+   		 		document.getElementById("Job").innerHTML = "Customer's Mobile No. :" + snapshot.val();
+    			document.getElementById("hide").style.visibility = "hidden" ;
+    		}
+    		else
+    		{
+    			document.getElementById("hide").style.visibility = "visible" ;
+   		 		document.getElementById("Job").innerHTML = "NO JOB ASSIGNED!!";
+    		}
+
+    	}
+    });
+
+    document.getElementById("name").innerHTML = tmp.Name;
+    document.getElementById("prof").innerHTML = tmp.Prof;
+    document.getElementById("mob").innerHTML = tmp.Mobile;
+    document.getElementById("rat").innerHTML = tmp.Rating;
+
+    document.getElementById("free").innerHTML = tmp.IsFree;
+
+    document.getElementById("tog").checked = tmp.IsFree;
+    		if(tmp.CurrJob!=0)
+    		{	
+    			console.log(snapshot.val())
+   		 		document.getElementById("Job").innerHTML = "Customer's Mobile No. :" + tmp.CurrJob ;
+    			document.getElementById("hide").style.visibility = "hidden" ;
+    		}
+    		else
+    		{
+    			document.getElementById("hide").style.visibility = "visible" ;
+   		 		document.getElementById("Job").innerHTML = "NO JOB ASSIGNED!!";
+    		}
+
+  });});
+
+function Toggle()
+{
+	console.log("DONE!!!")
+	document.getElementById("free").innerHTML = document.getElementById("tog").checked;
+
+	firebase.database().ref('Users/' + "Providers/" + store).update({"IsFree":document.getElementById("tog").checked});
+}
+
+
+
+
+
+
+
+</script>
+</head>
+
+<body>
+
+<div align="center">
+Name : <span id="name"></span> <br>
+Profession : <span id="prof"></span> <br> 
+Mobile No. : <span id="mob"></span> <br>
+Ratings : <span id="rat"></span> <br><br>
+</div>
+<div align="center"> Are you free? : <span id="free"></span> </div>
+
+<div align="center" id="hide">
+<label class="switch">
+<input id="tog" type="checkbox" onchange="Toggle()">
+<span class="slider round"></span>
+</label>
+</div>
+
+<div align="center" id="Job"></div>
+
+</label>
+
+<footer class="softkey">
+    <!-- <div id="softkey-left">Back</div> -->
+    <div id="softkey-center" align="center" style="position: absolute;
+  left: 50%;
+  bottom: 0px;
+  transform: translate(-50%, -50%);
+  margin: 0 auto;">Toggle</div>
+    <!-- <div id="softkey-right">Next</div> -->
+</footer>
+
+<form> 
+  <input type="submit" value="Jio Pay" /> 
+</form>
+</body>
+</html>

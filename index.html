@@ -10,32 +10,58 @@
 /*       body {
         border: 1px solid black;
       } */
+      
     </style>
-
+    <link rel="stylesheet" href="style.css">
     <!-- Inline scripts are forbidden in Firefox OS apps (CSP restrictions),
          so we use a script file. -->
+    <script src="https://www.gstatic.com/firebasejs/5.7.0/firebase.js" defer></script>
     <script src="app.js" defer></script>
+    <script src="naviboard.js" defer></script>
 
   </head>
 
-  <body>
+  <body id="app">
     <!-- This code is in the public domain. Enjoy! -->
-    <h1>Registration</h1>
+    <div class="bg-primary" id="container">
+      <h1 align="center">Kuber</h1>
      <form id="regform">
-        Name:<br>
-        <input class="items" type="text" name="name"><br><br>
-        Mobile No.:<br>
-        <input class="items" type="number" name="mob"><br><br>
-        User Type: <br>
-        <input class="items" type="radio" name="usertype" value="provider" checked>Provider<br>
-        <input class="items" type="radio" name="usertype" value="consumer">Consumer<br><br>
-        Services: <br>
-         <select class="items" name="servicetype" form="regform" onfocus="func()">
-          <option class="selitems" value="carpenter">Carpenter</option>
-          <option class="selitems" value="plumber">Plumber</option>
-          <option class="selitems" value="painter">Painter</option>
-        </select> 
+       <div align="center"> Name: </div>
+        <input id="name" class="navigable" type="text" name="name" required></input><br><br>
+      <div align="center"> Mobile No.: </div>
+        <input id="mob" class="navigable" type="number" name="mob" required></input><br><br>
+<!--         <div  align="center"> -->
+         User Type: <br>
+        <input id="prov" class="navigable" type="radio" name="usertype" onfocus="hidefunc()" value="provider" checked>Provider</input><br>
+        <input id="cons" class="navigable" type="radio" name="usertype" onfocus="hidefunc()" value="consumer">Consumer</input><br><br>
+        <span name="servicetype">Services:</span> <br>
+        <input class="navigable" type="radio" name="servicetype" value="Carpenter" checked><span name="servicetype">Carpenter</span></input><br>
+        <input class="navigable" type="radio" name="servicetype" value="Plumber"><span name="servicetype">Plumber</span></input><br>
+        <input class="navigable" type="radio" name="servicetype" value="Painter"><span name="servicetype">Painter</span></input><br>
+<!--          </aside> -->
+<!-- <button class="navigable" type="submit">Submit</button> -->
+        <!-- <input class="navigable" type="number" name="mob"></input> -->
+<!--          <select class="navigable" name="servicetype" onfocus="func()">
+          <option class="navigable" value="carpenter">Carpenter</option>
+          <option class="navigable" value="plumber">Plumber</option>
+          <option class="navigable" value="painter">Painter</option>
+        </select> -->
+<!--        <p> YO </p> -->
+        <!-- <a href class="navigable" type="submit" value="Submit">Submit</button> -->
+        <!-- <a href class="navigable"></a> -->
       </form> 
+      <!-- <a href class="navigable">Yo</a> -->
+      
+    </div>
   </body>
+
+  <footer class="softkey">
+      <!-- <div id="softkey-left">Back</div> -->
+      <!-- <div id="softkey-center">SELECT</div> -->
+      <div id="softkey-right" style="position: fixed;
+  right: 0px;
+  bottom: 0px;
+  margin: 0 auto;">Next</div>
+  </footer>
 
 </html>

@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<script src="naviboard.js" defer></script>
+<script src="https://www.gstatic.com/firebasejs/5.7.0/firebase.js"></script>
+
+
+<script>
+    var config = {
+    apiKey: "AIzaSyC_j71A8Gp_teFwKQDcaAc2PU8az_64XLc",
+    authDomain: "sawaalsite.firebaseapp.com",
+    databaseURL: "https://sawaalsite.firebaseio.com",
+    projectId: "sawaalsite",
+    storageBucket: "sawaalsite.appspot.com",
+    messagingSenderId: "44834842355",
+  };
+  firebase.initializeApp(config);
+    console.log("Y??")
+    var mobile = localStorage.getItem("Mobile");// get from local storage
+    var ref = firebase.database().ref("Users/Consumers");
+    var store;
+    ref.orderByChild("Mobile").equalTo(mobile).once("value", function(snapshot) {
+    // document.getElementById("hider").style.display = "none" ;
+    document.getElementById("hid3").style.display = "none" ;
+
+  snapshot.forEach(function(data) {
+    var tmp = data.val();
+    store = data.key;
+    console.log(store);
+    document.getElementById("name").innerHTML = tmp.Name
+    
+    document.getElementById("mob").innerHTML = tmp.Mobile
+
+  });});
+
+    var prof="null"
+    
+    function readform(){
+      document.getElementById("hid1").style.display = "none" ;
+      document.getElementById("hid2").style.display = "block" ;
+
+      prof = document.querySelector('input[name="proftype"]:checked').value;
+
+    var ref1 = firebase.database().ref("Users/Providers");
+    var mainList = document.getElementById("mainlist");
+    var sorter=[];
+    while (mainList.firstChild) {
+    mainList.removeChild(mainList.firstChild);
+    }
+
+    ref1.orderByChild("Prof").equalTo(prof).once("value", function(snapshot) {
+  snapshot.forEach(function(data) {
+        // document.getElementById("hider").style.display = "block" ;
+    console.log(data.val());
+    if (data.val()['IsFree'])
+    {
+      sorter.push(data.val());
+      console.log(data.val());
+      console.log(sorter.length);
+
+      }
+
+
+  });
+    sorter.sort(function(a,b){
+      return b['Rating']-a['Rating'];
+    });
+    console.log(sorter.length);
+
+    var al = sorter.length;
+    console.log(al)
+    for(var i=0;i<al;i++)
+    {
+    var node = document.createElement("li");    
+    var temper = "Name: " +sorter[i]['Name'] +'\n'+ " Mobile no: "+ sorter[i]['Mobile'] + "\n" + "Rating: "+sorter[i]['Rating'];
+    console.log(temper);  
+    var textnode = document.createTextNode(temper);
+    var inputnode = document.createElement("input");
+    inputnode.type = "radio"
+    inputnode.setAttribute("value",sorter[i]['Mobile'] );
+    inputnode.className = "navigable";
+    inputnode.checked=true;
+    inputnode.name = "WorkerId"
+    inputnode.val = sorter[i]['Mobile'];
+    node.appendChild(inputnode);                            
+    node.appendChild(textnode);
+     mainList.appendChild(node);
+    }
+    // mainList.firstChild.checked=true;
+     naviBoard.setNavigation('container1');
+
+
+});
+
+  
+}
+    
+    var worker,savor;
+    function select(){
+    document.getElementById("hid2").style.display = "none" ;
+    document.getElementById("hid3").style.display = "block" ;
+
+      worker = document.querySelector('input[name="WorkerId"]:checked').value;
+      worker = parseInt(worker,10)
+      console.log(worker);
+
+      var ref2 = firebase.database().ref("Users/Consumers/"+store);
+      ref2.update({"CurrWorker":worker});
+
+      var ref3 = firebase.database().ref("Users/Providers");
+      // var savor;
+    console.log(worker);
+        ref3.orderByChild("Mobile").equalTo(worker).once("value", function(snapshot) {
+  snapshot.forEach(function(data) {
+    console.log("HIII")
+    console.log(data.key);
+        savor=data.key;
+      console.log(savor);
+
+        var ref4 = firebase.database().ref("Users/Providers/"+savor);
+
+        ref4.once("value",function(
+          snapshot){
+          snapshot.forEach(function(data){
+            if(data.key=='Name')
+            document.getElementById("names").innerHTML = data.val()
+            if(data.key=='Mobile')
+            document.getElementById("mobs").innerHTML = data.val()
+            if(data.key=="Rating")
+            document.getElementById("rats").innerHTML = data.val()
+          });
+        });
+        ref4.update({"IsFree":false});
+        ref4.update({"CurrJob":mobile});
+  });});
+      }
+
+    function release(){
+      // PAY LOGIC
+
+      //DATABASE CHANGES
+    document.getElementById("hid3").style.display = "none" ;
+    document.getElementById("hid1").style.display = "block" ;
+    var ref5 = firebase.database().ref("Users/Providers/"+savor);
+    ref5.update({"IsFree":true});
+    ref5.update({"CurrJob":0});
+    var ref6 = firebase.database().ref("Users/Consumers/"+store);
+    ref6.update({"CurrWorker":0});
+
+
+    var newr = document.getElementById("ratis").value;
+    newr = parseFloat(newr);
+
+    // Rating Changes
+    var j,r;
+    ref5.once("value", function(snapshot) {
+      console.log(snapshot.key);
+      j=snapshot.val()['Jobs'];
+      r=snapshot.val()['Rating'];
+      console.log(j);
+      console.log(r);
+      j=parseInt(j);
+      r=parseFloat(r);
+
+      r = (r*j + newr)/(j+1);
+      r = r.toFixed(2);
+      j = j+1;
+
+      ref5.update({"Jobs":j});
+      ref5.update({"Rating":r});
+
+
+    });
+
+    }
+
+    window.addEventListener('load', funcload);
+    function funcload() {
+      naviBoard.setNavigation('container');
+    }
+
+    const softkeyCallback = {
+    // left: leftsoft,
+    center: centersoft,
+    right: rightsoft
+    };
+
+    var tempno=0;
+
+    function centersoft() {
+      var ele = document.activeElement;
+      if(ele.type=="radio") {
+        ele.checked=true;
+        console.log(ele);
+        // if(ele.name=="usertype") usertypetemp=ele.value;
+        // else if(ele.name="servicetype") servicetypetemp=ele.value;
+      }
+      // else if(ele.name=='firstselect') readform();
+      // else if(ele.name=='secondselect')  select();
+      // else if(ele.name=='thirdselect') release();
+    }
+
+    function rightsoft() {
+      if(tempno==0) {readform(); tempno=tempno+1;}
+      else if(tempno==1) {select(); tempno=tempno+1;}
+      else if(tempno==2) {release(); tempno=tempno+1;}
+
+    }
+
+    function handleKeyDown(evt) {
+    switch (evt.key) {
+        // case 'SoftLeft':
+            // Action case press left key
+            // softkeyCallback.left();
+        // break;
+
+        case 'SoftRight':
+        //     // Action case press right key
+            softkeyCallback.right();
+        break;
+
+        case 'Enter':
+        //     // Action case press center key
+            softkeyCallback.center();
+        break;
+    }
+};
+
+document.addEventListener('keydown', handleKeyDown);
+
+</script>
+</head>
+
+<body>
+
+Name : <span id="name"></span> <br>
+Mobile No. : <span id="mob"></span> <br>
+<br><br>
+
+<div id="container">
+
+<div id="hid1">
+<input class="navigable" type="radio" name="proftype" value="Carpenter" checked>Carpenter<br>
+<input class="navigable" type="radio" name="proftype" value="Plumber">Plumber<br>
+<input class="navigable" type="radio" name="proftype" value="Painter">Painter<br>
+<!-- <input name="firstselect" class="navigable" type="button" > Submit </input> -->
+</div>
+</div>
+<div id="container1">
+<div id="hid2">
+<ul id="mainlist">
+</ul>
+<!-- <button name="secondselect" id="hider" class="navigable" type="button"> Choose </button> -->
+</div>
+
+
+<div id="hid3">
+Worker Details: <br>
+Name : <span id="names"></span> <br>
+Mobile No. : <span id="mobs"></span> <br>
+Rating : <span id="rats"></span> <br> <br>
+
+Rate your worker (0 to 5) : <input class="navigable" min="0" max="5" type="number" name="rating" id="ratis">
+<!-- <button name="thirdselect" id="hidb" class="navigable" type="button"> Pay And Release </button> -->
+</div>
+</div>
+
+<footer class="softkey">
+    <!-- <div id="softkey-left">Back</div> -->
+    <div id="softkey-center" align="center" style="position: fixed;
+  left: 50%;
+  bottom: 0px;
+  transform: translate(-50%, 0px);
+  margin: 0 auto;">Select</div>
+    <div id="softkey-right" style="position: fixed;
+  right: 0px;
+  bottom: 0px;
+  margin: 0 auto;">Next</div>
+</footer>
+
+</body>
+</html>
