@@ -1,2 +1,3 @@
-# KuberBot
-A chatbot for Kuber
+Kuber
+
+An app for feature phones
