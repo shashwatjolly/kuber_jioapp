@@ -96,11 +96,15 @@ input:checked + .slider:before {
     		{	
     			console.log(snapshot.val())
    		 		document.getElementById("Job").innerHTML = "Customer's Mobile No. :" + snapshot.val();
-    			document.getElementById("hide").style.visibility = "hidden" ;
+    			document.getElementById("hide").style.display = "none" ;
+          document.getElementById("free").innerHTML = false ;
+
     		}
     		else
     		{
-    			document.getElementById("hide").style.visibility = "visible" ;
+    			document.getElementById("hide").style.display = "block" ;
+          document.getElementById("free").innerHTML = true ;
+          document.getElementById("tog").checked = true;
    		 		document.getElementById("Job").innerHTML = "NO JOB ASSIGNED!!";
     		}
 
@@ -119,11 +123,11 @@ input:checked + .slider:before {
     		{	
     			console.log(snapshot.val())
    		 		document.getElementById("Job").innerHTML = "Customer's Mobile No. :" + tmp.CurrJob ;
-    			document.getElementById("hide").style.visibility = "hidden" ;
+    			document.getElementById("hide").style.display = "none" ;
     		}
     		else
     		{
-    			document.getElementById("hide").style.visibility = "visible" ;
+    			document.getElementById("hide").style.display = "block" ;
    		 		document.getElementById("Job").innerHTML = "NO JOB ASSIGNED!!";
     		}
 
@@ -150,9 +154,9 @@ function Toggle()
 
 <div align="center">
 Name : <span id="name"></span> <br>
-Profession : <span id="prof"></span> <br> 
+Profession : <span id="prof"></span> <br>
 Mobile No. : <span id="mob"></span> <br>
-Ratings : <span id="rat"></span> <br><br>
+Ratings : <span id="rat"></span> <br>
 </div>
 <div align="center"> Are you free? : <span id="free"></span> </div>
 
@@ -177,8 +181,5 @@ Ratings : <span id="rat"></span> <br><br>
     <!-- <div id="softkey-right">Next</div> -->
 </footer>
 
-<form> 
-  <input type="submit" value="Jio Pay" /> 
-</form>
 </body>
 </html>
